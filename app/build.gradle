@@ -2,8 +2,8 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-android-extensions'
     id "androidx.navigation.safeargs.kotlin"
-//    id 'androidx.navigation.safeargs'
 }
 
 android {
@@ -26,12 +26,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    buildFeatures{
+        viewBinding true
     }
 }
 
@@ -55,6 +60,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:2.3.4"
 
     implementation "androidx.preference:preference-ktx:1.1.1"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
 
     testImplementation 'junit:junit:4.+'

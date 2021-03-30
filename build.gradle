@@ -13,7 +13,6 @@ buildscript {
         // in the individual module build.gradle files
 
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.4"
-//        classpath "androidx.navigation:navigation-safe-args-gradleplugin:2.3.0"
     }
 }
 
