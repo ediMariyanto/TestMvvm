@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 class RemoteDataSources {
 
     companion object {
-        private const val BASE_URL = "http://telkomsel.assetwatcher.net:2020/api/v1/"
+        private const val BASE_URL = ""
     }
 
     fun <Api> buildApi(
