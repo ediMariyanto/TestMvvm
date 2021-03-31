@@ -1,7 +1,6 @@
 package com.edimariyanto.testmvvm.ui.base
 
 import android.os.Bundle
-import android.os.WorkSource
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
-import com.edimariyanto.testmvvm.network.RemoteDataSources
-import com.edimariyanto.testmvvm.repository.BaseRepository
-import java.util.zip.Inflater
+import com.edimariyanto.testmvvm.data.network.RemoteDataSources
+import com.edimariyanto.testmvvm.data.repository.BaseRepository
 
 abstract class BaseFragment<VM: ViewModel, B: ViewBinding, R: BaseRepository> : Fragment() {
 

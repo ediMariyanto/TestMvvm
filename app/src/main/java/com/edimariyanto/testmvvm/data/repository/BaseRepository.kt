@@ -1,6 +1,6 @@
-package com.edimariyanto.testmvvm.repository
+package com.edimariyanto.testmvvm.data.repository
 
-import com.edimariyanto.testmvvm.network.Resources
+import com.edimariyanto.testmvvm.data.network.Resources
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException

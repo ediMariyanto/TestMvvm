@@ -1,4 +1,4 @@
-package com.edimariyanto.testmvvm.network
+package com.edimariyanto.testmvvm.data.network
 
 import okhttp3.ResponseBody
 

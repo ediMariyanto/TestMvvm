@@ -2,19 +2,13 @@ package com.edimariyanto.testmvvm.ui.auth
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
-import com.edimariyanto.testmvvm.R
+import com.edimariyanto.testmvvm.data.network.AuthApi
+import com.edimariyanto.testmvvm.data.network.Resources
+import com.edimariyanto.testmvvm.data.repository.AuthRepository
 import com.edimariyanto.testmvvm.databinding.FragmentLoginBinding
-import com.edimariyanto.testmvvm.network.AuthApi
-import com.edimariyanto.testmvvm.network.Resources
-import com.edimariyanto.testmvvm.repository.AuthRepository
 import com.edimariyanto.testmvvm.ui.base.BaseFragment
-import kotlinx.android.synthetic.main.fragment_login.*
-import java.util.*
 
 
 class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, AuthRepository>() {
@@ -23,16 +17,20 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, AuthRepo
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.loginResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.loginResponse.observe(viewLifecycleOwner, {
             when (it) {
                 is Resources.Success -> {
-                    Toast.makeText(requireContext(), "Berhasil, "+it.toString(), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Berhasil, " + it.toString(),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
 
                 is Resources.Failure -> {
                     Toast.makeText(requireContext(), "gagal" + ", ", Toast.LENGTH_LONG).show()
                 }
-        }
+            }
         })
 
         binding.btnSubmitLogin.setOnClickListener {

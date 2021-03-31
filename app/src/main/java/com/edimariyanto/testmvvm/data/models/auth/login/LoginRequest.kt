@@ -1,4 +1,4 @@
-package com.edimariyanto.testmvvm.models.auth.login
+package com.edimariyanto.testmvvm.data.models.auth.login
 
 data class LoginRequest(
     val password: String,

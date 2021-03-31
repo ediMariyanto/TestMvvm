@@ -1,7 +1,7 @@
-package com.edimariyanto.testmvvm.repository
+package com.edimariyanto.testmvvm.data.repository
 
-import com.edimariyanto.testmvvm.models.auth.login.LoginRequest
-import com.edimariyanto.testmvvm.network.AuthApi
+import com.edimariyanto.testmvvm.data.models.auth.login.LoginRequest
+import com.edimariyanto.testmvvm.data.network.AuthApi
 
 class AuthRepository(private val api: AuthApi) : BaseRepository() {
 

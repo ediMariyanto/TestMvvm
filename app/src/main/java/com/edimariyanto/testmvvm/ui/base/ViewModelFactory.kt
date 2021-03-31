@@ -2,8 +2,8 @@ package com.edimariyanto.testmvvm.ui.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.edimariyanto.testmvvm.repository.AuthRepository
-import com.edimariyanto.testmvvm.repository.BaseRepository
+import com.edimariyanto.testmvvm.data.repository.AuthRepository
+import com.edimariyanto.testmvvm.data.repository.BaseRepository
 import com.edimariyanto.testmvvm.ui.auth.AuthViewModel
 import java.lang.IllegalArgumentException
 

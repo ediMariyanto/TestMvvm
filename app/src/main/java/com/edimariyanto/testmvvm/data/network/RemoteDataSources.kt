@@ -1,4 +1,4 @@
-package com.edimariyanto.testmvvm.network
+package com.edimariyanto.testmvvm.data.network
 
 import com.edimariyanto.testmvvm.BuildConfig
 import okhttp3.OkHttpClient
