@@ -8,12 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
+import com.edimariyanto.testmvvm.data.UserPreferences
 import com.edimariyanto.testmvvm.data.network.RemoteDataSources
 import com.edimariyanto.testmvvm.data.repository.BaseRepository
 
 abstract class BaseFragment<VM: ViewModel, B: ViewBinding, R: BaseRepository> : Fragment() {
 
 
+    protected lateinit var userPreferences: UserPreferences
     protected lateinit var binding: B
     protected val remoteDataSource =  RemoteDataSources()
     protected lateinit var viewModel: VM
@@ -23,6 +25,7 @@ abstract class BaseFragment<VM: ViewModel, B: ViewBinding, R: BaseRepository> : 
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        userPreferences = UserPreferences(requireContext())
         binding = getFragmentBinding(inflater, container)
         val factory = ViewModelFactory(getFragmentRepository())
         viewModel = ViewModelProvider(this, factory).get(getViewModel())
