@@ -14,30 +14,37 @@ class RemoteDataSources {
     }
 
     fun <Api> buildApi(
-        api: Class<Api>
+            api: Class<Api>,
+            authToken: String? = null
     ) : Api{
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(
-                OkHttpClient.Builder().also {
-                    if (BuildConfig.DEBUG) {
-                        val logging = HttpLoggingInterceptor()
-                        logging.setLevel(HttpLoggingInterceptor.Level.BODY)
-                        it.addInterceptor(logging)
-                    }
-                    it.connectTimeout(60, TimeUnit.SECONDS)
-                    it.readTimeout(60, TimeUnit.SECONDS)
-                    it.writeTimeout(60, TimeUnit.SECONDS)
-                    it.addInterceptor { chain ->
-                        val original = chain.request()
-                        val requestBuilder = original.newBuilder()
-                            .header("X-App-Version", BuildConfig.VERSION_NAME)
+                    OkHttpClient.Builder()
+                            .addInterceptor { chain ->
+                                chain.proceed(chain.request().newBuilder().also {
+                                    it.addHeader("Authorization", "Bearer $authToken")
+                                }.build())
+                            }
+                            .also {
+                                if (BuildConfig.DEBUG) {
+                                    val logging = HttpLoggingInterceptor()
+                                    logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+                                    it.addInterceptor(logging)
+                                }
+                                it.connectTimeout(60, TimeUnit.SECONDS)
+                                it.readTimeout(60, TimeUnit.SECONDS)
+                                it.writeTimeout(60, TimeUnit.SECONDS)
+                                it.addInterceptor { chain ->
+                                    val original = chain.request()
+                                    val requestBuilder = original.newBuilder()
+                                            .header("X-App-Version", BuildConfig.VERSION_NAME)
 
-                        val request = requestBuilder.build()
-                        chain.proceed(request)
-                    }
-                        }.build()
-                    )
+                                    val request = requestBuilder.build()
+                                    chain.proceed(request)
+                                }
+                            }.build()
+            )
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(api)

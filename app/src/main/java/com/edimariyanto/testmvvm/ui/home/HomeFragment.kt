@@ -1,26 +1,65 @@
 package com.edimariyanto.testmvvm.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.edimariyanto.testmvvm.R
+import androidx.lifecycle.Observer
+import com.edimariyanto.testmvvm.data.models.auth.login.Data
+import com.edimariyanto.testmvvm.data.network.Resources
+import com.edimariyanto.testmvvm.data.network.UserApi
+import com.edimariyanto.testmvvm.data.repository.UserRepository
+import com.edimariyanto.testmvvm.databinding.FragmentHomeBinding
+import com.edimariyanto.testmvvm.ui.base.BaseFragment
+import com.edimariyanto.testmvvm.ui.visible
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import java.util.*
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, UserRepository>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.progressBar.visible(false)
+
+        viewModel.getUser()
+
+        viewModel.user.observe(viewLifecycleOwner, Observer {
+            when (it){
+                is Resources.Success -> {
+                    binding.progressBar.visible(false)
+                    updateUi(it.value.data)
+                }
+
+                is Resources.Loading ->{
+                    binding.progressBar.visible(true)
+                }
+            }
+        })
+
+
+        binding.btnLogout.setOnClickListener{
+            logout()
+        }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    private fun updateUi(user: Data){
+        with(binding) {
+            tvUserName.text = user.real_name
+        }
     }
 
+    override fun getViewModel() = HomeViewModel::class.java
+
+    override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentHomeBinding.inflate(inflater, container, false)
+
+    override fun getFragmentRepository(): UserRepository {
+        val token = runBlocking { userPreferences.authToken.first() }
+        val api = remoteDataSource.buildApi(UserApi::class.java, token)
+        return UserRepository(api)
+    }
 
 
 }

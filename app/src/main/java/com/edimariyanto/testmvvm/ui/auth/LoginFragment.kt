@@ -12,8 +12,10 @@ import com.edimariyanto.testmvvm.data.repository.AuthRepository
 import com.edimariyanto.testmvvm.databinding.FragmentLoginBinding
 import com.edimariyanto.testmvvm.ui.base.BaseFragment
 import com.edimariyanto.testmvvm.ui.enable
+import com.edimariyanto.testmvvm.ui.handleApiError
 import com.edimariyanto.testmvvm.ui.home.HomeActivity
 import com.edimariyanto.testmvvm.ui.startNewActivity
+import com.edimariyanto.testmvvm.ui.visible
 import kotlinx.coroutines.launch
 
 
@@ -22,20 +24,20 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, AuthRepo
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        binding.progressLogin.visible(false)
         binding.btnSubmitLogin.enable(false)
 
         viewModel.loginResponse.observe(viewLifecycleOwner, {
+            binding.progressLogin.visible(it is Resources.Loading)
             when (it) {
                 is Resources.Success -> {
                     lifecycleScope.launch {
-                        userPreferences.saveAuthToken(it.value.data.access_token)
+                        viewModel.saveToken(it.value.data.access_token)
                         requireActivity().startNewActivity(HomeActivity::class.java)
                     }
                 }
 
-                is Resources.Failure -> {
-                    Toast.makeText(requireContext(), "gagal" + ", ", Toast.LENGTH_LONG).show()
-                }
+                is Resources.Failure -> handleApiError(it) {login()}
             }
         })
 
@@ -45,11 +47,16 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, AuthRepo
         }
 
         binding.btnSubmitLogin.setOnClickListener {
-            val userName = binding.etUsernameLogin.text.toString().trim()
-            val password = binding.etPasswordLogin.text.toString()
-
-            viewModel.login(userName, password)
+            login()
         }
+    }
+
+    private fun login(){
+        binding.progressLogin.visible(true)
+        val userName = binding.etUsernameLogin.text.toString().trim()
+        val password = binding.etPasswordLogin.text.toString()
+
+        viewModel.login(userName, password)
     }
 
     override fun getViewModel() = AuthViewModel::class.java
@@ -60,7 +67,7 @@ class LoginFragment : BaseFragment<AuthViewModel, FragmentLoginBinding, AuthRepo
     ) = FragmentLoginBinding.inflate(inflater, container, false)
 
 
-    override fun getFragmentRepository() = AuthRepository(remoteDataSource.buildApi(AuthApi::class.java))
+    override fun getFragmentRepository() = AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences)
 
 
 }
